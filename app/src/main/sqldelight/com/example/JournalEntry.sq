@@ -1,0 +1,22 @@
+CREATE TABLE journal_entry (
+    id INTEGER NOT NULL PRIMARY KEY,
+    video_path TEXT NOT NULL,
+    description TEXT,
+    created_at INTEGER NOT NULL
+);
+
+insert:
+INSERT INTO journal_entry(
+    video_path,
+    description,
+    created_at
+)
+VALUES (?, ?, ?);
+
+selectAll:
+SELECT * FROM journal_entry
+ORDER BY created_at DESC;
+
+deleteById:
+DELETE FROM journal_entry
+WHERE id = ?;
