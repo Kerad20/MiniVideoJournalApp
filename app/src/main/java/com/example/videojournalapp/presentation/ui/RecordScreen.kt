@@ -43,7 +43,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RecordScreen(navController: NavController, vm: RecorderViewModel = koinViewModel()){
     val state by vm.state.collectAsState()
-    val permissionState by vm.permissionState.collectAsState()
     val context = LocalContext.current
 
     val controller = remember {
@@ -64,7 +63,7 @@ fun RecordScreen(navController: NavController, vm: RecorderViewModel = koinViewM
 
             vm.updatePermissionState(camera, audio)
 
-            if (permissionState.cameraGranted && permissionState.audioGranted && state.isCameraRecording){
+            if (state.hasPermissions && state.isCameraRecording){
                 recorder.startRecording{
                     vm.insertVideoEntry(it, state.description)
                 }
@@ -97,7 +96,7 @@ fun RecordScreen(navController: NavController, vm: RecorderViewModel = koinViewM
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            if (permissionState.cameraGranted && permissionState.audioGranted){
+            if (state.hasPermissions){
                 CameraPreview(controller)
             }
 

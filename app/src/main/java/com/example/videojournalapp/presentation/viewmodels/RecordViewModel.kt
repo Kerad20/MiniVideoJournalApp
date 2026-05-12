@@ -2,7 +2,7 @@ package com.example.videojournalapp.presentation.viewmodels
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.example.videojournalapp.domain.model.PermissionState
+import androidx.lifecycle.viewModelScope
 import com.example.videojournalapp.domain.model.RecorderState
 import com.example.videojournalapp.domain.usecase.InsertEntryUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -20,12 +20,6 @@ class RecorderViewModel(
     private val _state = MutableStateFlow(RecorderState())
     val state = _state.asStateFlow()
 
-    val scope = CoroutineScope(Dispatchers.IO)
-
-    private val _permissionState = MutableStateFlow(PermissionState())
-
-    val permissionState = _permissionState.asStateFlow()
-
     fun onDescriptionChange(value: String) {
         _state.update {
             it.copy(description = value)
@@ -39,13 +33,13 @@ class RecorderViewModel(
     }
 
     fun updatePermissionState(camera: Boolean, audio: Boolean){
-        _permissionState.update {
-            it.copy(cameraGranted = camera, audioGranted = audio)
+        _state.update {
+            it.copy(hasPermissions = camera && audio)
         }
     }
 
     fun insertVideoEntry(path: Uri, desc: String){
-        scope.launch {
+        viewModelScope.launch {
             insertEntryUseCase(path.toString(), desc)
         }
 

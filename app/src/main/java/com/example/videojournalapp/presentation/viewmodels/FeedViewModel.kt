@@ -16,7 +16,7 @@ class FeedViewModel(
         .map { FeedState(items = it) }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
+            SharingStarted.Eagerly,
             FeedState()
         )
 }
